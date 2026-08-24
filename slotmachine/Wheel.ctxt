@@ -1,0 +1,37 @@
+#BlueJ class context
+#Sun Aug 23 12:52:06 COT 2026
+comment0.target=Wheel
+comment1.params=position
+comment1.target=Wheel(int)
+comment1.text=Crea una rueda vacia en la posicion dada.
+comment10.target=void makeInvisible()
+comment10.text=Hace invisible la rueda y todos sus simbolos.
+comment11.target=boolean ok()
+comment11.text=Indica si la ultima operacion se realizo con exito.
+comment12.target=void repositionSymbols()
+comment13.target=void updateHighlight()
+comment14.params=color
+comment14.target=int indexOf(java.lang.String)
+comment15.params=pos min max
+comment15.target=int clamp(int, int, int)
+comment2.params=pos color
+comment2.target=void addSymbol(int, java.lang.String)
+comment2.text=Agrega un simbolo del color dado en la posicion pos.
+comment3.params=color
+comment3.target=void delSymbol(java.lang.String)
+comment3.text=Elimina el primer simbolo que tenga el color dado.
+comment4.params=color
+comment4.target=void placeSymbol(java.lang.String)
+comment4.text=Ubica como simbolo actual el que tenga el color dado.
+comment5.target=void spin()
+comment5.text=Gira la rueda al siguiente simbolo.
+comment6.target=java.lang.String currentSymbol()
+comment6.text=Retorna el color del simbolo actualmente visible.
+comment7.target=java.lang.String[] symbols()
+comment7.text=Retorna los colores de todos los simbolos en orden.
+comment8.params=newPosition
+comment8.target=void reposition(int)
+comment8.text=Reubica esta rueda en una nueva posicion horizontal.
+comment9.target=void makeVisible()
+comment9.text=Hace visible la rueda y todos sus simbolos.
+numComments=16

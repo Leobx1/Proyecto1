@@ -1,0 +1,18 @@
+#BlueJ class context
+#Sun Aug 23 12:52:06 COT 2026
+comment0.target=Symbol
+comment1.params=color x y
+comment1.target=Symbol(java.lang.String, int, int)
+comment1.text=Crea un simbolo del color y posicion dados.
+comment2.target=java.lang.String getColor()
+comment2.text=Retorna el color de este simbolo.
+comment3.params=newX newY
+comment3.target=void moveTo(int, int)
+comment3.text=Mueve el simbolo a una posicion absoluta.
+comment4.params=delta
+comment4.target=void shiftX(int)
+comment4.text=Desplaza el simbolo horizontalmente sin cambiar su Y.
+comment5.params=isCurrent
+comment5.target=void highlight(boolean)
+comment5.text=Cambia el tamano para resaltar el simbolo actual.
+numComments=6
