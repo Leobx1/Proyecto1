@@ -1,0 +1,16 @@
+#BlueJ class context
+#Sun Sep 06 20:51:59 COT 2026
+comment0.target=RectangleFrame
+comment1.params=x y w h
+comment1.target=RectangleFrame(int, int, int, int)
+comment1.text=Crea un rectangulo marco en la posicion dada.
+comment2.params=newX newY
+comment2.target=void moveTo(int, int)
+comment2.text=Mueve el marco a una posicion absoluta.
+comment3.params=delta
+comment3.target=void shiftX(int)
+comment3.text=Desplaza el marco horizontalmente.
+comment4.params=newColor
+comment4.target=void updateColor(java.lang.String)
+comment4.text=Cambia el color del marco y lo redibuja.
+numComments=5

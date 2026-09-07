@@ -8,7 +8,7 @@ public class Symbol extends Circle
     public Symbol(String color, int x, int y)
     {
         super();
-        this.xPos = 20;
+        this.xPos = 70;
         this.yPos = 15;
         this.color = color;
         changeColor(color);

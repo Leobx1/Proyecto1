@@ -1,17 +1,21 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Wheel
 {
     private static final int BASE_X = 40;
-    private static final int SPACING = 60;
+    private static final int SPACING = 80;
     private static final int BASE_Y = 50;
-    private static final int SYMBOL_SPACING = 40;
+    private static final int VISIBLE_SPACING = 40;
 
     private ArrayList<Symbol> symbols;
     private int currentIndex;
     private int xPosition;
     private boolean visible;
     private boolean ok;
+    private boolean locked;
+    private RectangleFrame frame;
+    private static Random random = new Random();
 
     /** Crea una rueda vacia en la posicion dada. */
     public Wheel(int position)
@@ -21,20 +25,21 @@ public class Wheel
         currentIndex = 0;
         visible = false;
         ok = true;
+        locked = false;
+        frame = new RectangleFrame(xPosition - 5, BASE_Y - 10, 70, 180);
+        frame.changeColor("black");
     }
 
-    /** Agrega un simbolo del color dado en la posicion pos. */
+    /** Agrega un simbolo del color dado (se crea invisible). */
     public void addSymbol(int pos, String color)
     {
         int p = clamp(pos, 1, symbols.size() + 1);
-        int y = BASE_Y + (p - 1) * SYMBOL_SPACING;
-        Symbol s = new Symbol(color, xPosition, y);
+        int centeredX = xPosition + 30;
+        Symbol s = new Symbol(color, centeredX, -100);
         symbols.add(p - 1, s);
-        repositionSymbols();
-        if (visible) s.makeVisible();
-        currentIndex = 0;
-        updateHighlight();
         ok = true;
+        currentIndex = 0;  
+        if (visible) updateVisibleSymbols();  
     }
 
     /** Elimina el primer simbolo que tenga el color dado. */
@@ -47,9 +52,8 @@ public class Wheel
         }
         Symbol s = symbols.remove(idx);
         if (visible) s.makeInvisible();
-        repositionSymbols();
         if (currentIndex >= symbols.size()) currentIndex = 0;
-        updateHighlight();
+        if (visible) updateVisibleSymbols();
         ok = true;
     }
 
@@ -62,23 +66,66 @@ public class Wheel
             return;
         }
         currentIndex = idx;
-        updateHighlight();
+        if (visible) updateVisibleSymbols();
         ok = true;
     }
 
-    /** Gira la rueda al siguiente simbolo. */
+    /** Gira la rueda a un simbolo aleatorio. */
     public void spin()
     {
         if (symbols.isEmpty()) {
             ok = false;
             return;
         }
-        currentIndex = (currentIndex + 1) % symbols.size();
-        updateHighlight();
+        int jumps = random.nextInt(symbols.size());
+        currentIndex = (currentIndex + jumps) % symbols.size();
+        updateVisibleSymbols();
         ok = true;
     }
 
-    /** Retorna el color del simbolo actualmente visible. */
+    /** Gira la rueda un numero de pasos, mostrando cada paso si es visible. */
+    public void spinSteps(int steps)
+    {
+        if (symbols.isEmpty()) {
+            ok = false;
+            return;
+        }
+        int direction = steps < 0 ? -1 : 1;
+        int totalSteps = Math.abs(steps);
+        for (int i = 0; i < totalSteps; i++) {
+            currentIndex = ((currentIndex + direction) % symbols.size() + symbols.size()) % symbols.size();
+            updateVisibleSymbols();
+        }
+        ok = true;
+    }
+
+    /** Fija la rueda para que no gire con spin(). */
+    public void lock()
+    {
+        locked = true;
+        ok = true;
+    }
+
+    /** Suelta la rueda para que vuelva a girar con spin(). */
+    public void unlock()
+    {
+        locked = false;
+        ok = true;
+    }
+
+    /** Indica si la rueda esta fija. */
+    public boolean isLocked()
+    {
+        return locked;
+    }
+
+    /** Indica si la rueda tiene un simbolo del color dado. */
+    public boolean hasColor(String color)
+    {
+        return indexOf(color) != -1;
+    }
+
+    /** Retorna el color del simbolo actualmente visible en el medio. */
     public String currentSymbol()
     {
         if (symbols.isEmpty()) {
@@ -106,15 +153,17 @@ public class Wheel
         int delta = newX - xPosition;
         xPosition = newX;
         if (delta != 0) {
+            frame.shiftX(delta);
             for (Symbol s : symbols) s.shiftX(delta);
         }
     }
 
-    /** Hace visible la rueda y todos sus simbolos. */
+    /** Hace visible la rueda y actualiza los 3 simbolos visibles. */
     public void makeVisible()
     {
         visible = true;
-        for (Symbol s : symbols) s.makeVisible();
+        frame.makeVisible();
+        updateVisibleSymbols();
         ok = true;
     }
 
@@ -122,6 +171,7 @@ public class Wheel
     public void makeInvisible()
     {
         visible = false;
+        frame.makeInvisible();
         for (Symbol s : symbols) s.makeInvisible();
         ok = true;
     }
@@ -132,17 +182,33 @@ public class Wheel
         return ok;
     }
 
-    private void repositionSymbols()
+    /** Actualiza cuales 3 simbolos son visibles (anterior, actual, siguiente). */
+    private void updateVisibleSymbols()
     {
-        for (int i = 0; i < symbols.size(); i++) {
-            symbols.get(i).moveTo(xPosition, BASE_Y + i * SYMBOL_SPACING);
-        }
-    }
+        if (symbols.isEmpty()) return;
 
-    private void updateHighlight()
-    {
+        int idxPrev = (currentIndex - 1 + symbols.size()) % symbols.size();
+        int idxCurr = currentIndex;
+        int idxNext = (currentIndex + 1) % symbols.size();
+
         for (int i = 0; i < symbols.size(); i++) {
-            symbols.get(i).highlight(i == currentIndex);
+            Symbol s = symbols.get(i);
+            
+            if (i == idxPrev) {
+                s.moveTo(xPosition + 30, BASE_Y);
+                s.highlight(false);
+                if (visible) s.makeVisible();
+            } else if (i == idxCurr) {
+                s.moveTo(xPosition + 30, BASE_Y + VISIBLE_SPACING);
+                s.highlight(true);
+                if (visible) s.makeVisible();
+            } else if (i == idxNext) {
+                s.moveTo(xPosition + 30, BASE_Y + 2 * VISIBLE_SPACING);
+                s.highlight(false);
+                if (visible) s.makeVisible();
+            } else {
+                s.makeInvisible();
+            }
         }
     }
 
@@ -159,5 +225,16 @@ public class Wheel
         if (pos < min) return min;
         if (pos > max) return max;
         return pos;
+    }
+  
+    /** Cambia el color del marco de la rueda (sin forzar visibilidad si esta invisible). */
+    public void setFrameColor(String color)
+    {
+        if (visible) {
+            frame.updateColor(color);
+            updateVisibleSymbols();
+        } else {
+            frame.changeColor(color);
+        }
     }
 }
