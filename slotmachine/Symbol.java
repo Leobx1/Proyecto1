@@ -11,10 +11,12 @@ public class Symbol extends Circle
         this.xPos = 70;
         this.yPos = 15;
         this.color = color;
-        changeColor(color);
         moveTo(x, y);
     }
-
+    public void applyColor()
+    {
+        changeColor(color);
+    }
     /** Retorna el color de este simbolo. */
     public String getColor()
     {

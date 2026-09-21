@@ -1,0 +1,18 @@
+#BlueJ class context
+#Sun Sep 20 19:06:53 COT 2026
+comment0.target=Figura
+comment0.text=Interfaz que define el contrato para todas las figuras geometricas.
+comment1.target=void makeVisible()
+comment1.text=Hace visible la figura en el canvas.
+comment2.target=void makeInvisible()
+comment2.text=Hace invisible la figura en el canvas.
+comment3.params=newColor
+comment3.target=void changeColor(java.lang.String)
+comment3.text=Cambia el color de la figura.
+comment4.params=distance
+comment4.target=void moveHorizontal(int)
+comment4.text=Desplaza la figura horizontalmente.
+comment5.params=distance
+comment5.target=void moveVertical(int)
+comment5.text=Desplaza la figura verticalmente.
+numComments=6

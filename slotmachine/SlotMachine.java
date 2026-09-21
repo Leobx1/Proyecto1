@@ -8,6 +8,7 @@ public class SlotMachine
     private ArrayList<Wheel> wheels;
     private boolean visible;
     private boolean ok;
+    private String[] solution;
 
     /** Crea una maquina tragamonedas vacia. */
     public SlotMachine()
@@ -15,6 +16,34 @@ public class SlotMachine
         wheels = new ArrayList<>();
         visible = false;
         ok = true;
+        solution = null;
+    }
+
+    /** Crea una maquina con n ruedas y n simbolos de colores variados. */
+    public SlotMachine(int n)
+    {
+        wheels = new ArrayList<>();
+        visible = false;
+        ok = true;
+        solution = null;
+    
+        String[] availableColors = {"red", "blue", "green", "yellow", "magenta"};
+    
+        
+        for (int i = 1; i <= n; i++) {
+            addWheel(i);
+            
+            
+            for (int j = 0; j < n; j++) {
+                String color = availableColors[(int)(Math.random() * availableColors.length)];
+                addSymbol(i, j + 1, color);
+            }
+            
+            
+            for (int k = 0; k < (int)(Math.random() * n); k++) {
+                wheels.get(i - 1).spin();
+            }
+        }
     }
 
     /** Agrega una rueda en la posicion pos. */
@@ -238,6 +267,68 @@ public class SlotMachine
     /** Indica si la configuracion actual es ganadora. */
    public boolean isJackpot()
     {
+        return isJackpotCheck();
+    }
+
+    /** Resuelve el problema de la maratón encontrando una configuracion ganadora (invisible). */
+    public boolean solve(){
+        if (wheels.isEmpty()) {
+            ok = false;
+            return false;
+        }
+
+        makeInvisible();
+
+    
+        String[] firstWheelSymbols = wheels.get(0).symbols();
+        String targetColor = null;
+
+        for (String color : firstWheelSymbols) {
+            boolean existsInAll = true;
+            for (int i = 1; i < wheels.size(); i++) {
+                if (!wheels.get(i).hasColor(color)) {
+                    existsInAll = false;
+                    break;
+                }
+            }
+            if (existsInAll) {
+                targetColor = color;
+                break;
+            }
+        }
+
+        if (targetColor == null) {
+            ok = false;
+            return false;
+        }
+
+        
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).placeSymbol(targetColor);
+        }
+
+        solution = configuration();
+        ok = true;
+        return isJackpotCheck();
+    }
+
+    /** Simula la solucion encontrada por solve(), mostrando la maquina. */
+    public boolean simulate()
+    {
+        if (solution == null) {
+            ok = false;
+            alert("Ejecute solve() primero.");
+            return false;
+        }
+
+        makeVisible();
+
+        for (int i = 0; i < wheels.size(); i++) {
+            Wheel w = wheels.get(i);
+            w.placeSymbol(solution[i]);
+        }
+
+        ok = true;
         return isJackpotCheck();
     }
 

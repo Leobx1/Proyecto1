@@ -9,7 +9,7 @@ import java.awt.*;
 
 
  
-public class Rectangle{
+public class Rectangle implements Figura{
 
     public static int EDGES = 4;
     

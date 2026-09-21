@@ -34,8 +34,9 @@ public class Wheel
     public void addSymbol(int pos, String color)
     {
         int p = clamp(pos, 1, symbols.size() + 1);
-        int centeredX = xPosition + 30;
+        int centeredX = xPosition + 45;
         Symbol s = new Symbol(color, centeredX, -100);
+        s.changeColor(color);
         symbols.add(p - 1, s);
         ok = true;
         currentIndex = 0;  
@@ -183,34 +184,42 @@ public class Wheel
     }
 
     /** Actualiza cuales 3 simbolos son visibles (anterior, actual, siguiente). */
-    private void updateVisibleSymbols()
-    {
-        if (symbols.isEmpty()) return;
+    private void updateVisibleSymbols(){
+    if (symbols.isEmpty()) return;
 
-        int idxPrev = (currentIndex - 1 + symbols.size()) % symbols.size();
-        int idxCurr = currentIndex;
-        int idxNext = (currentIndex + 1) % symbols.size();
+    int idxPrev = (currentIndex - 1 + symbols.size()) % symbols.size();
+    int idxCurr = currentIndex;
+    int idxNext = (currentIndex + 1) % symbols.size();
 
-        for (int i = 0; i < symbols.size(); i++) {
-            Symbol s = symbols.get(i);
-            
-            if (i == idxPrev) {
-                s.moveTo(xPosition + 30, BASE_Y);
-                s.highlight(false);
-                if (visible) s.makeVisible();
-            } else if (i == idxCurr) {
-                s.moveTo(xPosition + 30, BASE_Y + VISIBLE_SPACING);
-                s.highlight(true);
-                if (visible) s.makeVisible();
-            } else if (i == idxNext) {
-                s.moveTo(xPosition + 30, BASE_Y + 2 * VISIBLE_SPACING);
-                s.highlight(false);
-                if (visible) s.makeVisible();
-            } else {
-                s.makeInvisible();
+    for (int i = 0; i < symbols.size(); i++) {
+        Symbol s = symbols.get(i);
+        
+        if (i == idxPrev) {
+            s.moveTo(xPosition + 45, BASE_Y);
+            s.highlight(false);
+            if (visible) {
+                s.makeVisible();
+                s.applyColor();
             }
+        } else if (i == idxCurr) {
+            s.moveTo(xPosition + 45, BASE_Y + VISIBLE_SPACING);
+            s.highlight(true);
+            if (visible) {
+                s.makeVisible();
+                s.applyColor();
+            }
+        } else if (i == idxNext) {
+            s.moveTo(xPosition + 45, BASE_Y + 2 * VISIBLE_SPACING);
+            s.highlight(false);
+            if (visible) {
+                s.makeVisible();
+                s.applyColor();
+            }
+        } else {
+            s.makeInvisible();
         }
     }
+}
 
     private int indexOf(String color)
     {

@@ -1,0 +1,13 @@
+#BlueJ class context
+#Sun Sep 20 20:01:35 COT 2026
+comment0.target=SlotMachineContestTest
+comment1.target=void test1()
+comment2.target=void test2()
+comment3.target=void test3()
+comment4.target=void test4()
+comment5.target=void test5()
+comment6.target=void sharedTest1()
+comment7.target=void sharedTest2()
+comment8.params=args
+comment8.target=void main(java.lang.String[])
+numComments=9

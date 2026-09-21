@@ -7,7 +7,7 @@ import java.awt.*;
  * @version 1.0  (15 July 2000)
  */
 
-public class Triangle{
+public class Triangle implements Figura{
     
     public static int VERTICES=3;
     

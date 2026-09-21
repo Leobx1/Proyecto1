@@ -8,7 +8,7 @@ import java.awt.geom.*;
  * @version 1.0.  (15 July 2000) 
  */
 
-public class Circle{
+public class Circle implements Figura{
 
     public static final double PI=3.1416;
     

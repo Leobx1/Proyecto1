@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Sep 06 20:51:59 COT 2026
+#Sun Sep 20 19:55:58 COT 2026
 comment0.target=SlotMachineC2Test
 comment0.text=\r\n Pruebas de unidad del Ciclo 2 (swap, lock/unlock, spin con pasos,\r\n spin con configuracion dada) y de regresion del Ciclo 1.\r\n\r\n IMPORTANTE\: todas las pruebas se ejecutan en modo invisible\r\n (nunca se llama a makeVisible()), tal como lo exige el enunciado.\r\n\r\n Cada prueba documenta si valida "que deberia hacer" (caso valido)\r\n o "que NO deberia hacer" (caso invalido / de error).\r\n
 comment1.target=void setUp()
