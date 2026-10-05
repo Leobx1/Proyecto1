@@ -1,0 +1,13 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=RebelWheel
+comment0.text=Rueda rebelde\: gira normalmente, pero no se deja bloquear, intercambiar ni eliminar. Marco gris.
+comment1.params=position totalWheels
+comment1.target=RebelWheel(int, int)
+comment1.text=Crea una rueda rebelde en la posicion dada.
+comment2.target=java.lang.String getType()
+comment3.target=void spin()
+comment4.target=boolean canLock()
+comment5.target=boolean canSwap()
+comment6.target=boolean canDelete()
+numComments=7

@@ -1,0 +1,12 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=LeftyWheel
+comment0.text=\r\n Rueda zurda\: si tiene una rueda a su izquierda, al girar copia el simbolo\r\n actual de esa rueda (si ella tiene un simbolo de ese color). Si no hay rueda\r\n a la izquierda, o no tiene ese color, gira como una rueda normal. Marco naranja.\r\n
+comment1.params=position totalWheels
+comment1.target=LeftyWheel(int, int)
+comment1.text=Crea una rueda zurda en la posicion dada.
+comment2.target=java.lang.String getType()
+comment3.params=left
+comment3.target=void setLeftNeighbor(Wheel)
+comment4.target=void spin()
+numComments=5

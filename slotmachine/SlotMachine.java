@@ -19,38 +19,53 @@ public class SlotMachine
         solution = null;
     }
 
-    /** Crea una maquina con n ruedas y n simbolos de colores variados. */
+    /** Crea una maquina con n ruedas normales y n simbolos normales de colores variados. */
     public SlotMachine(int n)
+    {
+        this(n, "normal", "normal");
+    }
+
+    /**
+     * Crea una maquina con n ruedas del tipo dado y n simbolos del tipo dado por rueda,
+     * de colores variados. Tipos de rueda: normal, lefty, rebel.
+     * Tipos de simbolo: normal, ephemeral, shy, contagious.
+     */
+    public SlotMachine(int n, String wheelType, String symbolType)
     {
         wheels = new ArrayList<>();
         visible = false;
         ok = true;
         solution = null;
-    
+
         String[] availableColors = {"red", "blue", "green", "magenta"};
-    
-        
+
         for (int i = 1; i <= n; i++) {
-            addWheel(i);
-            
-            
+            addWheel(wheelType, i);
+            if (!ok) return;
             for (int j = 0; j < n; j++) {
                 String color = availableColors[(int)(Math.random() * availableColors.length)];
-                addSymbol(i, j + 1, color);
+                addSymbol(symbolType, i, j + 1, color);
             }
-            
-            
-            for (int k = 0; k < (int)(Math.random() * n); k++) {
-                wheels.get(i - 1).spin();
-            }
+            wheels.get(i - 1).randomize();
         }
     }
 
     /** Agrega una rueda en la posicion pos. */
     public void addWheel(int pos)
     {
+        addWheel("normal", pos);
+    }
+
+    /** Agrega una rueda del tipo dado (normal, lefty, rebel) en la posicion pos. */
+    public void addWheel(String type, int pos)
+    {
         int p = clamp(pos, 1, wheels.size() + 1);
-        Wheel w = new Wheel(p, wheels.size() + 1);
+        Wheel w = createWheel(type, p, wheels.size() + 1);
+        if (w == null) {
+            ok = false;
+            alert("Tipo de rueda desconocido: " + type);
+            return;
+        }
         wheels.add(p - 1, w);
         repositionWheels();
         if (visible) w.makeVisible();
@@ -66,7 +81,13 @@ public class SlotMachine
             return;
         }
         int p = clamp(pos, 1, wheels.size());
-        Wheel w = wheels.remove(p - 1);
+        Wheel w = wheels.get(p - 1);
+        if (!w.canDelete()) {
+            ok = false;
+            alert("La rueda " + p + " (" + w.getType() + ") no se puede eliminar.");
+            return;
+        }
+        wheels.remove(p - 1);
         if (visible) w.makeInvisible();
         repositionWheels();
         ok = true;
@@ -75,6 +96,12 @@ public class SlotMachine
     /** Agrega un simbolo del color dado en la posicion pos de la rueda especificada. */
     public void addSymbol(int wheel, int pos, String color)
     {
+        addSymbol("normal", wheel, pos, color);
+    }
+
+    /** Agrega un simbolo del tipo dado (normal, ephemeral, shy, contagious) en la posicion pos de la rueda. */
+    public void addSymbol(String type, int wheel, int pos, String color)
+    {
         if (wheels.isEmpty()) {
             ok = false;
             alert("No hay ruedas disponibles.");
@@ -82,9 +109,9 @@ public class SlotMachine
         }
         int w = clamp(wheel, 1, wheels.size());
         Wheel targetWheel = wheels.get(w - 1);
-        targetWheel.addSymbol(pos, color);
+        targetWheel.addSymbol(type, pos, color);
         ok = targetWheel.ok();
-        if (!ok) alert("No se pudo agregar el simbolo a la rueda " + w);
+        if (!ok) alert("No se pudo agregar el simbolo (tipo \"" + type + "\") a la rueda " + w);
         updateFrameColors();
     }
 
@@ -206,6 +233,11 @@ public class SlotMachine
             alert("No se puede intercambiar: una de las ruedas esta fija.");
             return;
         }
+        if (!w1.canSwap() || !w2.canSwap()) {
+            ok = false;
+            alert("No se puede intercambiar: una de las ruedas es rebelde.");
+            return;
+        }
         wheels.set(i1, w2);
         wheels.set(i2, w1);
         repositionWheels();
@@ -222,7 +254,13 @@ public class SlotMachine
             return;
         }
         int idx = clamp(wheel, 1, wheels.size());
-        wheels.get(idx - 1).lock();
+        Wheel w = wheels.get(idx - 1);
+        if (!w.canLock()) {
+            ok = false;
+            alert("La rueda " + idx + " (" + w.getType() + ") no se deja bloquear.");
+            return;
+        }
+        w.lock();
         ok = true;
     }
 
@@ -321,6 +359,10 @@ public class SlotMachine
 
         for (int i = 0; i < wheels.size(); i++) {
             Wheel w = wheels.get(i);
+            if (w.isLocked() && !w.currentSymbol().equals(solution[i])) {
+                ok = false;   // rueda fija con otro color: no se puede llegar a la solucion
+                return false;
+            }
             while (!w.currentSymbol().equals(solution[i])) {
                 spin(i+1);
             }
@@ -362,10 +404,22 @@ public class SlotMachine
         return ok;
     }
 
+    /** Crea una rueda segun su tipo, o retorna null si el tipo no existe. */
+    private Wheel createWheel(String type, int position, int totalWheels)
+    {
+        if (type == null) return null;
+        String t = type.toLowerCase();
+        if (t.equals("normal")) return new NormalWheel(position, totalWheels);
+        if (t.equals("lefty"))  return new LeftyWheel(position, totalWheels);
+        if (t.equals("rebel"))  return new RebelWheel(position, totalWheels);
+        return null;
+    }
+
     private void repositionWheels(){   
         int total = wheels.size();
         for (int i = 0; i < total; i++) {
             wheels.get(i).rescale(i + 1, total);
+            wheels.get(i).setLeftNeighbor(i > 0 ? wheels.get(i - 1) : null);
         }   
     }   
 
@@ -385,10 +439,9 @@ public class SlotMachine
     private void updateFrameColors()
     {
         boolean isJack = isJackpotCheck();
-        String frameColor = isJack ? "yellow" : "black";
         for (Wheel w : wheels) {
-            w.setFrameColor(frameColor);
-    }
+            w.refreshFrame(isJack);
+        }
     }
 
     private boolean isJackpotCheck()

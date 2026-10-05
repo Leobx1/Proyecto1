@@ -1,0 +1,10 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=NormalWheel
+comment0.text=Rueda normal\: gira a un simbolo aleatorio. Marco negro.
+comment1.params=position totalWheels
+comment1.target=NormalWheel(int, int)
+comment1.text=Crea una rueda normal en la posicion dada.
+comment2.target=java.lang.String getType()
+comment3.target=void spin()
+numComments=4

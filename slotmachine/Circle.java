@@ -29,6 +29,16 @@ public class Circle implements Figura{
 
 
        
+    /** Posicion horizontal actual (esquina superior izquierda). */
+    public int getXPosition(){
+        return xPosition;
+    }
+
+    /** Posicion vertical actual (esquina superior izquierda). */
+    public int getYPosition(){
+        return yPosition;
+    }
+
     public void makeVisible(){
         isVisible = true;
         draw();

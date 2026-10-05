@@ -1,0 +1,29 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=SlotMachineC4Test
+comment0.text=\r\n  tipos de ruedas y de simbolos.\r\n se ejecutan en modo invisible (sin makeVisible()).\r\n
+comment1.target=void setUp()
+comment1.text=Rueda 1 normal, rueda 2 lefty y rueda 3 rebel, todas con rojo y verde.
+comment10.target=void hiddenShyShouldStillCount()
+comment10.text=DEBERIA\: un simbolo shy oculto sigue siendo el simbolo actual de la rueda.
+comment11.target=void contagiousShouldSpreadColor()
+comment11.text=DEBERIA\: el simbolo contagioso pasa su color a los demas simbolos de la rueda.
+comment12.target=void unknownTypesShouldFail()
+comment12.text=NO DEBERIA\: un tipo de rueda o de simbolo desconocido se acepta.
+comment2.target=void leftyShouldCopyLeftWheel()
+comment2.text=DEBERIA\: la rueda lefty copia el simbolo de la rueda a su izquierda.
+comment3.target=void leftyWithoutLeftWheelShouldStillSpin()
+comment3.text=NO DEBERIA\: una rueda lefty sin rueda a la izquierda no falla al girar.
+comment4.target=void rebelShouldNotLock()
+comment4.text=NO DEBERIA\: la rueda rebel no se deja bloquear.
+comment5.target=void rebelShouldNotSwap()
+comment5.text=NO DEBERIA\: la rueda rebel no se deja intercambiar.
+comment6.target=void rebelShouldNotBeDeleted()
+comment6.text=NO DEBERIA\: la rueda rebel no se deja eliminar.
+comment7.target=void normalShouldLock()
+comment7.text=DEBERIA\: la rueda normal si se puede bloquear.
+comment8.target=void ephemeralShouldShrinkUntilPoint()
+comment8.text=DEBERIA\: el simbolo ephemeral decrece en cada seleccion hasta un punto.
+comment9.target=void shyShouldToggleVisibility()
+comment9.text=DEBERIA\: el simbolo shy alterna entre visible e invisible.
+numComments=13

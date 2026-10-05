@@ -1,0 +1,10 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=NormalSymbol
+comment0.text=Simbolo normal\: no tiene ningun comportamiento especial al ser seleccionado.
+comment1.params=color x y
+comment1.target=NormalSymbol(java.lang.String, int, int)
+comment1.text=Crea un simbolo normal del color y posicion dados.
+comment2.target=java.lang.String getType()
+comment3.target=void onSpinSelected()
+numComments=4

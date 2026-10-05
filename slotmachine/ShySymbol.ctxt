@@ -1,0 +1,13 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=ShySymbol
+comment0.text=\r\n Simbolo timido\: alterna entre visible e invisible cada vez que es\r\n seleccionado al girar. Sigue contando como simbolo actual de la rueda\r\n (para configuration() y isJackpot()) aunque no se dibuje.\r\n
+comment1.params=color x y
+comment1.target=ShySymbol(java.lang.String, int, int)
+comment1.text=Crea un simbolo timido del color y posicion dados; empieza visible.
+comment2.target=java.lang.String getType()
+comment3.target=void onSpinSelected()
+comment4.target=boolean isDisplayable()
+comment5.target=boolean isShown()
+comment5.text=Indica si el simbolo esta en estado visible.
+numComments=6

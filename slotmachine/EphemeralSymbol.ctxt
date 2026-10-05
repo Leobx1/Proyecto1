@@ -1,0 +1,13 @@
+#BlueJ class context
+#Mon Oct 05 13:04:23 COT 2026
+comment0.target=EphemeralSymbol
+comment0.text=\r\n Simbolo efimero\: cada vez que es seleccionado al girar decrece su tamano\r\n hasta quedar como un punto (tamano minimo), donde se mantiene.\r\n
+comment1.params=color x y
+comment1.target=EphemeralSymbol(java.lang.String, int, int)
+comment1.text=Crea un simbolo efimero del color y posicion dados, con tamano completo.
+comment2.target=java.lang.String getType()
+comment3.target=void onSpinSelected()
+comment4.target=int getDisplaySize()
+comment5.target=int getSize()
+comment5.text=Retorna el tamano actual del simbolo.
+numComments=6
