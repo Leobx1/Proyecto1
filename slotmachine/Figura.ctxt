@@ -1,5 +1,5 @@
 #BlueJ class context
-#Sun Sep 20 19:06:53 COT 2026
+#Sun Oct 04 19:36:08 COT 2026
 comment0.target=Figura
 comment0.text=Interfaz que define el contrato para todas las figuras geometricas.
 comment1.target=void makeVisible()

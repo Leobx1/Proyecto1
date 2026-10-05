@@ -27,7 +27,7 @@ public class SlotMachine
         ok = true;
         solution = null;
     
-        String[] availableColors = {"red", "blue", "green", "yellow", "magenta"};
+        String[] availableColors = {"red", "blue", "green", "magenta"};
     
         
         for (int i = 1; i <= n; i++) {
@@ -50,7 +50,7 @@ public class SlotMachine
     public void addWheel(int pos)
     {
         int p = clamp(pos, 1, wheels.size() + 1);
-        Wheel w = new Wheel(p);
+        Wheel w = new Wheel(p, wheels.size() + 1);
         wheels.add(p - 1, w);
         repositionWheels();
         if (visible) w.makeVisible();
@@ -276,13 +276,12 @@ public class SlotMachine
             ok = false;
             return false;
         }
-
+    
         makeInvisible();
-
     
         String[] firstWheelSymbols = wheels.get(0).symbols();
         String targetColor = null;
-
+    
         for (String color : firstWheelSymbols) {
             boolean existsInAll = true;
             for (int i = 1; i < wheels.size(); i++) {
@@ -296,20 +295,17 @@ public class SlotMachine
                 break;
             }
         }
-
+    
         if (targetColor == null) {
             ok = false;
             return false;
         }
-
-        
-        for (int i = 0; i < wheels.size(); i++) {
-            wheels.get(i).placeSymbol(targetColor);
-        }
-
-        solution = configuration();
+    
+        solution = new String[wheels.size()];
+        java.util.Arrays.fill(solution, targetColor);   // guarda el color encontrado, nada mas
+    
         ok = true;
-        return isJackpotCheck();
+        return true;   // encontro una solucion (no significa que ya este ganada)
     }
 
     /** Simula la solucion encontrada por solve(), mostrando la maquina. */
@@ -325,12 +321,16 @@ public class SlotMachine
 
         for (int i = 0; i < wheels.size(); i++) {
             Wheel w = wheels.get(i);
-            w.placeSymbol(solution[i]);
+            while (!w.currentSymbol().equals(solution[i])) {
+                spin(i+1);
+            }
+            updateFrameColors();   
         }
 
         ok = true;
         return isJackpotCheck();
     }
+
 
     /** Hace visible el simulador. */
     public void makeVisible()
@@ -362,12 +362,12 @@ public class SlotMachine
         return ok;
     }
 
-    private void repositionWheels()
-    {
-        for (int i = 0; i < wheels.size(); i++) {
-            wheels.get(i).reposition(i + 1);
-        }
-    }
+    private void repositionWheels(){   
+        int total = wheels.size();
+        for (int i = 0; i < total; i++) {
+            wheels.get(i).rescale(i + 1, total);
+        }   
+    }   
 
     private void alert(String message)
     {

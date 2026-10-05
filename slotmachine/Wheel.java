@@ -6,7 +6,7 @@ public class Wheel
     private static final int BASE_X = 40;
     private static final int SPACING = 80;
     private static final int BASE_Y = 50;
-    private static final int VISIBLE_SPACING = 40;
+    private static final int VISIBLE_SPACING = 50;
 
     private ArrayList<Symbol> symbols;
     private int currentIndex;
@@ -16,17 +16,21 @@ public class Wheel
     private boolean locked;
     private RectangleFrame frame;
     private static Random random = new Random();
+    private int diameter;
+    private int spacing;
 
     /** Crea una rueda vacia en la posicion dada. */
-    public Wheel(int position)
+    public Wheel(int position, int totalWheels)
     {
-        xPosition = BASE_X + (position - 1) * SPACING;
+        spacing = Math.max(25, 260 / totalWheels);
+        diameter = Math.max(8, spacing - 22);
+        xPosition = BASE_X + (position - 1) * spacing;
         symbols = new ArrayList<>();
         currentIndex = 0;
         visible = false;
         ok = true;
         locked = false;
-        frame = new RectangleFrame(xPosition - 5, BASE_Y - 10, 70, 180);
+        frame = new RectangleFrame(xPosition - 5, BASE_Y - 10, spacing - 10, diameter + 30);
         frame.changeColor("black");
     }
 
@@ -187,39 +191,27 @@ public class Wheel
     private void updateVisibleSymbols(){
     if (symbols.isEmpty()) return;
 
-    int idxPrev = (currentIndex - 1 + symbols.size()) % symbols.size();
+    
     int idxCurr = currentIndex;
-    int idxNext = (currentIndex + 1) % symbols.size();
-
+    
     for (int i = 0; i < symbols.size(); i++) {
         Symbol s = symbols.get(i);
+        int symbolX = xPosition - 5 + (spacing - 10) / 2 - diameter / 2;   // centrado horizontal
+        int symbolY = (BASE_Y - 10) + 15;
         
-        if (i == idxPrev) {
-            s.moveTo(xPosition + 45, BASE_Y);
-            s.highlight(false);
-            if (visible) {
-                s.makeVisible();
-                s.applyColor();
-            }
-        } else if (i == idxCurr) {
-            s.moveTo(xPosition + 45, BASE_Y + VISIBLE_SPACING);
+        if (i == idxCurr) {
+            s.moveTo(symbolX, symbolY);
             s.highlight(true);
             if (visible) {
                 s.makeVisible();
                 s.applyColor();
             }
-        } else if (i == idxNext) {
-            s.moveTo(xPosition + 45, BASE_Y + 2 * VISIBLE_SPACING);
-            s.highlight(false);
-            if (visible) {
-                s.makeVisible();
-                s.applyColor();
-            }
-        } else {
+        
+        }  else {
             s.makeInvisible();
         }
     }
-}
+    }
 
     private int indexOf(String color)
     {
@@ -246,4 +238,21 @@ public class Wheel
             frame.changeColor(color);
         }
     }
+        public void rescale(int newPosition, int totalWheels)
+    {
+        spacing = Math.max(25, 260 / totalWheels);
+        diameter = Math.max(10, spacing - 15);
+        int newX = BASE_X + (newPosition - 1) * spacing;
+        int delta = newX - xPosition;          
+    
+        frame.changeSize(diameter + 30, spacing - 10);
+        frame.moveTo(newX - 5, BASE_Y - 10);    
+    
+        for (Symbol s : symbols) {
+            s.changeSize(diameter);
+            s.shiftX(delta);                   
+        }
+    
+        xPosition = newX;
+    } 
 }

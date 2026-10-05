@@ -1,8 +1,8 @@
 #BlueJ class context
-#Sun Sep 20 19:20:29 COT 2026
+#Sun Oct 04 19:36:08 COT 2026
 comment0.target=Wheel
-comment1.params=position
-comment1.target=Wheel(int)
+comment1.params=position totalWheels
+comment1.target=Wheel(int, int)
 comment1.text=Crea una rueda vacia en la posicion dada.
 comment10.params=color
 comment10.target=boolean hasColor(java.lang.String)
@@ -32,6 +32,8 @@ comment2.text=Agrega un simbolo del color dado (se crea invisible).
 comment20.params=color
 comment20.target=void setFrameColor(java.lang.String)
 comment20.text=Cambia el color del marco de la rueda (sin forzar visibilidad si esta invisible).
+comment21.params=newPosition totalWheels
+comment21.target=void rescale(int, int)
 comment3.params=color
 comment3.target=void delSymbol(java.lang.String)
 comment3.text=Elimina el primer simbolo que tenga el color dado.
@@ -49,4 +51,4 @@ comment8.target=void unlock()
 comment8.text=Suelta la rueda para que vuelva a girar con spin().
 comment9.target=boolean isLocked()
 comment9.text=Indica si la rueda esta fija.
-numComments=21
+numComments=22
