@@ -1,5 +1,5 @@
 #BlueJ class context
-#Tue Oct 13 21:26:42 COT 2026
+#Wed Oct 14 17:22:31 COT 2026
 comment0.target=ShySymbol
 comment0.text=\r\n Simbolo timido\: alterna entre visible e invisible cada vez que es\r\n seleccionado al girar. Sigue contando como simbolo actual de la rueda\r\n (para configuration() y isJackpot()) aunque no se dibuje.\r\n
 comment1.params=color x y

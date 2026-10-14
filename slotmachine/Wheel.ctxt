@@ -1,5 +1,5 @@
 #BlueJ class context
-#Tue Oct 13 21:26:42 COT 2026
+#Wed Oct 14 17:22:31 COT 2026
 comment0.target=Wheel
 comment0.text=\r\n Rueda abstracta de la maquina tragamonedas.\r\n\r\n Contiene lo comun a todas las ruedas (simbolos, marco, bloqueo, dibujo) y\r\n deja a las subclases la forma de girar ({@link \#spin()}) y las reglas sobre\r\n que operaciones admiten (canLock, canSwap, canDelete).\r\n\r\n Subclases\: {@link NormalWheel}, {@link LeftyWheel} y {@link RebelWheel}.\r\n
 comment1.params=position totalWheels frameColor

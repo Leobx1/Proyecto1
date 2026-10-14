@@ -1,5 +1,5 @@
 #BlueJ class context
-#Tue Oct 13 21:26:42 COT 2026
+#Wed Oct 14 17:22:31 COT 2026
 comment0.target=Symbol
 comment0.text=\r\n Simbolo abstracto de la maquina tragamonedas.\r\n\r\n Define lo comun a todos los tipos de simbolo (color, posicion, dibujo) y deja\r\n a las subclases el comportamiento que ocurre cuando el simbolo es\r\n seleccionado por una rueda al girar ({@link \#onSpinSelected()}).\r\n\r\n Cada tipo se distingue visualmente por una marca dibujada sobre el simbolo\r\n (el color del simbolo no cambia, porque es su identidad en el juego)\:\r\n normal sin marca, efimero con anillo, timido con punto central y\r\n contagioso con una cruz.\r\n\r\n Subclases\: {@link NormalSymbol}, {@link EphemeralSymbol}, {@link ShySymbol}\r\n y {@link ContagiousSymbol}.\r\n
 comment1.params=color
