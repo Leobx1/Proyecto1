@@ -50,21 +50,37 @@ public abstract class Wheel
         frame.changeColor(baseFrameColor);
     }
 
-    /** Agrega un simbolo normal del color dado (se crea invisible). */
-    public void addSymbol(int pos, String color)
+    /** Marca la ultima operacion como fallida y crea la excepcion con el mensaje dado. */
+    private SlotMachineException fail(String message)
+    {
+        ok = false;
+        return new SlotMachineException(message);
+    }
+
+    /**
+     * Agrega un simbolo normal del color dado (se crea invisible).
+     * @throws SlotMachineException si el color no es valido
+     */
+    public void addSymbol(int pos, String color) throws SlotMachineException
     {
         addSymbol("normal", pos, color);
     }
 
-    /** Agrega un simbolo del tipo y color dados (se crea invisible). Falla si el tipo no existe. */
-    public void addSymbol(String type, int pos, String color)
+    /**
+     * Agrega un simbolo del tipo y color dados (se crea invisible).
+     * @throws SlotMachineException UNKNOWN_SYMBOL_TYPE si el tipo no existe,
+     *         INVALID_COLOR si el color es nulo o no es soportado
+     */
+    public void addSymbol(String type, int pos, String color) throws SlotMachineException
     {
         int p = clamp(pos, 1, symbols.size() + 1);
         int centeredX = xPosition + 45;
         Symbol s = createSymbol(type, color, centeredX, -100);
         if (s == null) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.UNKNOWN_SYMBOL_TYPE);
+        }
+        if (!Symbol.isValidColor(color)) {
+            throw fail(SlotMachineException.INVALID_COLOR);
         }
         s.changeColor(color);
         symbols.add(p - 1, s);
@@ -85,13 +101,15 @@ public abstract class Wheel
         return null;
     }
 
-    /** Elimina el primer simbolo que tenga el color dado. */
-    public void delSymbol(String color)
+    /**
+     * Elimina el primer simbolo que tenga el color dado.
+     * @throws SlotMachineException SYMBOL_NOT_FOUND si la rueda no tiene ese color
+     */
+    public void delSymbol(String color) throws SlotMachineException
     {
         int idx = indexOf(color);
         if (idx == -1) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.SYMBOL_NOT_FOUND);
         }
         Symbol s = symbols.remove(idx);
         if (visible) s.makeInvisible();
@@ -100,13 +118,15 @@ public abstract class Wheel
         ok = true;
     }
 
-    /** Ubica como simbolo actual el que tenga el color dado. */
-    public void placeSymbol(String color)
+    /**
+     * Ubica como simbolo actual el que tenga el color dado.
+     * @throws SlotMachineException SYMBOL_NOT_FOUND si la rueda no tiene ese color
+     */
+    public void placeSymbol(String color) throws SlotMachineException
     {
         int idx = indexOf(color);
         if (idx == -1) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.SYMBOL_NOT_FOUND);
         }
         currentIndex = idx;
         if (visible) updateVisibleSymbols();
@@ -116,8 +136,11 @@ public abstract class Wheel
     /** Nombre del tipo de rueda (por ejemplo "normal"). */
     public abstract String getType();
 
-    /** Gira la rueda segun las reglas de su tipo. */
-    public abstract void spin();
+    /**
+     * Gira la rueda segun las reglas de su tipo.
+     * @throws SlotMachineException EMPTY_WHEEL si la rueda no tiene simbolos
+     */
+    public abstract void spin() throws SlotMachineException;
 
     /** Indica si esta rueda se puede fijar. Por defecto si. */
     public boolean canLock()
@@ -142,26 +165,29 @@ public abstract class Wheel
     {
     }
 
-    /** Coloca la rueda en un indice aleatorio sin contar como giro (para el estado inicial). */
-    public void randomize()
+    /**
+     * Coloca la rueda en un indice aleatorio sin contar como giro (para el estado inicial).
+     * @throws SlotMachineException EMPTY_WHEEL si la rueda no tiene simbolos
+     */
+    public void randomize() throws SlotMachineException
     {
         if (symbols.isEmpty()) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.EMPTY_WHEEL);
         }
         currentIndex = random.nextInt(symbols.size());
         updateVisibleSymbols();
         ok = true;
     }
 
-    /** Prepara un giro: retorna false (y marca ok=false) si no hay simbolos. */
-    protected boolean prepareSpin()
+    /**
+     * Prepara un giro.
+     * @throws SlotMachineException EMPTY_WHEEL si la rueda no tiene simbolos
+     */
+    protected void prepareSpin() throws SlotMachineException
     {
         if (symbols.isEmpty()) {
-            ok = false;
-            return false;
+            throw fail(SlotMachineException.EMPTY_WHEEL);
         }
-        return true;
     }
 
     /** Cantidad de simbolos de la rueda. */
@@ -185,12 +211,14 @@ public abstract class Wheel
         ok = true;
     }
 
-    /** Gira la rueda un numero de pasos, mostrando cada paso si es visible. */
-    public void spinSteps(int steps)
+    /**
+     * Gira la rueda un numero de pasos, mostrando cada paso si es visible.
+     * @throws SlotMachineException EMPTY_WHEEL si la rueda no tiene simbolos
+     */
+    public void spinSteps(int steps) throws SlotMachineException
     {
         if (symbols.isEmpty()) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.EMPTY_WHEEL);
         }
         int direction = steps < 0 ? -1 : 1;
         int totalSteps = Math.abs(steps);
@@ -206,12 +234,14 @@ public abstract class Wheel
         ok = true;
     }
 
-    /** Fija la rueda para que no gire con spin(). */
-    public void lock()
+    /**
+     * Fija la rueda para que no gire con spin().
+     * @throws SlotMachineException WHEEL_CANNOT_LOCK si el tipo de rueda no se deja bloquear
+     */
+    public void lock() throws SlotMachineException
     {
         if (!canLock()) {
-            ok = false;
-            return;
+            throw fail(SlotMachineException.WHEEL_CANNOT_LOCK);
         }
         locked = true;
         ok = true;

@@ -1,12 +1,15 @@
 #BlueJ class context
-#Mon Oct 05 13:04:23 COT 2026
+#Tue Oct 13 21:26:42 COT 2026
 comment0.target=ContagiousSymbol
 comment0.text=\r\n Simbolo contagioso (tipo nuevo propuesto)\: cuando es seleccionado al girar,\r\n contagia su color a todos los demas simbolos de su rueda, de modo que\r\n quedan todos iguales.\r\n
 comment1.params=color x y
 comment1.target=ContagiousSymbol(java.lang.String, int, int)
 comment1.text=Crea un simbolo contagioso del color y posicion dados.
 comment2.target=java.lang.String getType()
-comment3.target=void onSpinSelected()
-comment4.params=companions
-comment4.target=void onSpinSelected(java.util.List)
-numComments=5
+comment3.target=java.lang.String getMark()
+comment4.params=x y d
+comment4.target=java.awt.Shape buildMark(int, int, int)
+comment5.target=void onSpinSelected()
+comment6.params=companions
+comment6.target=void onSpinSelected(java.util.List)
+numComments=7

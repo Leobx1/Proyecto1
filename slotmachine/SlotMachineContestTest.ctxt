@@ -1,13 +1,16 @@
 #BlueJ class context
-#Mon Oct 05 13:04:23 COT 2026
+#Tue Oct 13 21:26:42 COT 2026
 comment0.target=SlotMachineContestTest
-comment1.target=void test1()
-comment2.target=void test2()
-comment3.target=void test3()
-comment4.target=void test4()
-comment5.target=void test5()
-comment6.target=void sharedTest1()
-comment7.target=void sharedTest2()
-comment8.params=args
-comment8.target=void main(java.lang.String[])
-numComments=9
+comment1.params=game
+comment1.target=boolean trySolve(SlotMachine)
+comment1.text=Resuelve la maquina; retorna false si no tiene solucion (NO_SOLUTION).
+comment2.target=void test1()
+comment3.target=void test2()
+comment4.target=void test3()
+comment5.target=void test4()
+comment6.target=void test5()
+comment7.target=void sharedTest1()
+comment8.target=void sharedTest2()
+comment9.params=args
+comment9.target=void main(java.lang.String[])
+numComments=10

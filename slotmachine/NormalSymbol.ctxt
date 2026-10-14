@@ -1,5 +1,5 @@
 #BlueJ class context
-#Mon Oct 05 13:04:23 COT 2026
+#Tue Oct 13 21:26:42 COT 2026
 comment0.target=NormalSymbol
 comment0.text=Simbolo normal\: no tiene ningun comportamiento especial al ser seleccionado.
 comment1.params=color x y

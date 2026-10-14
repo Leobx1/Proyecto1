@@ -17,9 +17,9 @@ public class RebelWheel extends Wheel
     }
 
     @Override
-    public void spin()
+    public void spin() throws SlotMachineException
     {
-        if (!prepareSpin()) return;
+        prepareSpin();
         landOn(getCurrentIndex() + random.nextInt(symbolCount()));
     }
 

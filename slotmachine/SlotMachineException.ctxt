@@ -1,0 +1,8 @@
+#BlueJ class context
+#Tue Oct 13 21:26:42 COT 2026
+comment0.target=SlotMachineException
+comment0.text=\r\n Excepcion del simulador SlotMachine. Cada constante es el mensaje de una\r\n situacion de error distinta.\r\n
+comment1.params=message
+comment1.target=SlotMachineException(java.lang.String)
+comment1.text=\r\n Crea una excepcion con el mensaje dado.\r\n @param message mensaje de error, normalmente una de las constantes de esta clase\r\n
+numComments=2

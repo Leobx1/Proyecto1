@@ -5,17 +5,36 @@
  * a las subclases el comportamiento que ocurre cuando el simbolo es
  * seleccionado por una rueda al girar ({@link #onSpinSelected()}).
  *
+ * Cada tipo se distingue visualmente por una marca dibujada sobre el simbolo
+ * (el color del simbolo no cambia, porque es su identidad en el juego):
+ * normal sin marca, efimero con anillo, timido con punto central y
+ * contagioso con una cruz.
+ *
  * Subclases: {@link NormalSymbol}, {@link EphemeralSymbol}, {@link ShySymbol}
  * y {@link ContagiousSymbol}.
  */
 public abstract class Symbol extends Circle
 {
+    /** Colores que el Canvas sabe dibujar y que se aceptan para un simbolo. */
+    private static final java.util.Set<String> VALID_COLORS = new java.util.HashSet<>(
+        java.util.Arrays.asList("red", "black", "blue", "yellow", "green", "magenta",
+                                "white", "orange", "cyan", "gray", "pink"));
+
     /** Tamano del simbolo cuando es el actual de la rueda. */
     protected static final int SELECTED_SIZE = 40;
     /** Tamano del simbolo cuando no es el actual. */
     protected static final int UNSELECTED_SIZE = 26;
 
     private String color;
+    private int diameter = 30;
+    private boolean drawn = false;
+    private final Object markKey = new Object();
+
+    /** Indica si el color dado es soportado por el Canvas. */
+    public static boolean isValidColor(String color)
+    {
+        return color != null && VALID_COLORS.contains(color);
+    }
 
     /** Crea un simbolo del color y posicion dados. */
     protected Symbol(String color, int x, int y)
@@ -108,5 +127,86 @@ public abstract class Symbol extends Circle
     public void highlight(boolean isCurrent)
     {
         changeSize(isCurrent ? getDisplaySize() : UNSELECTED_SIZE);
+    }
+
+    /** Nombre de la marca visual del tipo ("none", "ring", "dot", "cross"). */
+    public String getMark()
+    {
+        return "none";
+    }
+
+    /** Forma de la marca visual dentro del simbolo (x, y, d: esquina y diametro), o null si no tiene. */
+    protected java.awt.Shape buildMark(int x, int y, int d)
+    {
+        return null;
+    }
+
+    /** Color de la marca: contrasta con el color del simbolo. */
+    protected String markColor()
+    {
+        switch (color) {
+            case "yellow": case "green": case "white": case "cyan": case "orange": case "pink":
+                return "black";
+            default:
+                return "white";
+        }
+    }
+
+    private void drawMark()
+    {
+        if (!drawn) return;
+        java.awt.Shape mark = buildMark(getXPosition(), getYPosition(), diameter);
+        if (mark == null) return;
+        Canvas.getCanvas().draw(markKey, markColor(), mark);
+    }
+
+    private void eraseMark()
+    {
+        if (drawn && buildMark(0, 0, diameter) != null) Canvas.getCanvas().erase(markKey);
+    }
+
+    @Override
+    public void makeVisible()
+    {
+        drawn = true;
+        super.makeVisible();
+        drawMark();
+    }
+
+    @Override
+    public void makeInvisible()
+    {
+        eraseMark();
+        drawn = false;
+        super.makeInvisible();
+    }
+
+    @Override
+    public void moveHorizontal(int distance)
+    {
+        super.moveHorizontal(distance);
+        drawMark();
+    }
+
+    @Override
+    public void moveVertical(int distance)
+    {
+        super.moveVertical(distance);
+        drawMark();
+    }
+
+    @Override
+    public void changeSize(int newDiameter)
+    {
+        diameter = newDiameter;
+        super.changeSize(newDiameter);
+        drawMark();
+    }
+
+    @Override
+    public void changeColor(String newColor)
+    {
+        super.changeColor(newColor);
+        drawMark();
     }
 }

@@ -16,9 +16,26 @@ public class SlotMachineC2Test
 {
     private SlotMachine sm;
 
+    /** Accion que puede lanzar una SlotMachineException. */
+    private interface Action
+    {
+        void run() throws SlotMachineException;
+    }
+
+    /** Verifica que la accion lance una SlotMachineException con el mensaje dado. */
+    private void expect(String message, Action action)
+    {
+        try {
+            action.run();
+            fail("Debio lanzar: " + message);
+        } catch (SlotMachineException e) {
+            assertEquals(message, e.getMessage());
+        }
+    }
+
     /** Crea una maquina de 3 ruedas con simbolos conocidos antes de cada prueba. */
     @Before
-    public void setUp()
+    public void setUp() throws SlotMachineException
     {
         sm = new SlotMachine();
         sm.addWheel(1);
@@ -36,7 +53,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: agregar una rueda incrementa la cantidad de ruedas. */
     @Test
-    public void addWheelShouldAddOneWheel()
+    public void addWheelShouldAddOneWheel() throws SlotMachineException
     {
         int before = sm.configuration().length;
         sm.addWheel(1);
@@ -46,16 +63,16 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: eliminar una rueda de una maquina vacia debe fallar. */
     @Test
-    public void delWheelOnEmptyMachineShouldFail()
+    public void delWheelOnEmptyMachineShouldFail() throws SlotMachineException
     {
         SlotMachine empty = new SlotMachine();
-        empty.delWheel(1);
+        expect(SlotMachineException.NO_WHEELS, () -> empty.delWheel(1));
         assertFalse(empty.ok());
     }
 
     /** QUE DEBERIA HACER: placeSymbol ubica el color indicado como el actual. */
     @Test
-    public void placeSymbolShouldSetCurrentSymbol()
+    public void placeSymbolShouldSetCurrentSymbol() throws SlotMachineException
     {
         sm.placeSymbol(1, "green");
         assertEquals("green", sm.configuration()[0]);
@@ -64,15 +81,15 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: placeSymbol con un color inexistente debe fallar. */
     @Test
-    public void placeSymbolWithUnknownColorShouldFail()
+    public void placeSymbolWithUnknownColorShouldFail() throws SlotMachineException
     {
-        sm.placeSymbol(1, "purple");
+        expect(SlotMachineException.SYMBOL_NOT_FOUND, () -> sm.placeSymbol(1, "purple"));
         assertFalse(sm.ok());
     }
 
     /** QUE DEBERIA HACER: isJackpot es verdadero cuando las 3 ruedas muestran el mismo color. */
     @Test
-    public void isJackpotShouldBeTrueWhenAllWheelsMatch()
+    public void isJackpotShouldBeTrueWhenAllWheelsMatch() throws SlotMachineException
     {
         sm.spin(new String[]{"red", "red", "red"});
         assertTrue(sm.isJackpot());
@@ -80,7 +97,7 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: isJackpot debe ser falso cuando los colores difieren. */
     @Test
-    public void isJackpotShouldBeFalseWhenWheelsDiffer()
+    public void isJackpotShouldBeFalseWhenWheelsDiffer() throws SlotMachineException
     {
         sm.spin(new String[]{"red", "blue", "yellow"});
         assertFalse(sm.isJackpot());
@@ -90,18 +107,18 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: una rueda fijada queda marcada como no disponible para girar. */
     @Test
-    public void lockShouldPreventSingleWheelSpin()
+    public void lockShouldPreventSingleWheelSpin() throws SlotMachineException
     {
         sm.lock(2);
         String before = sm.configuration()[1];
-        sm.spin(2);
+        expect(SlotMachineException.WHEEL_LOCKED, () -> sm.spin(2));
         assertFalse(sm.ok());
         assertEquals(before, sm.configuration()[1]);
     }
 
     /** QUE DEBERIA HACER: al soltar una rueda, spin(wheel) vuelve a funcionar sobre ella. */
     @Test
-    public void unlockShouldAllowSpinAgain()
+    public void unlockShouldAllowSpinAgain() throws SlotMachineException
     {
         sm.lock(2);
         sm.unlock(2);
@@ -111,7 +128,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: spin() general debe saltar las ruedas fijas y girar las demas. */
     @Test
-    public void generalSpinShouldSkipLockedWheels()
+    public void generalSpinShouldSkipLockedWheels() throws SlotMachineException
     {
         sm.lock(2);
         String lockedBefore = sm.configuration()[1];
@@ -122,10 +139,10 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: lock sobre una maquina sin ruedas debe fallar. */
     @Test
-    public void lockOnEmptyMachineShouldFail()
+    public void lockOnEmptyMachineShouldFail() throws SlotMachineException
     {
         SlotMachine empty = new SlotMachine();
-        empty.lock(1);
+        expect(SlotMachineException.NO_WHEELS, () -> empty.lock(1));
         assertFalse(empty.ok());
     }
 
@@ -133,7 +150,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: swap intercambia el contenido visible de dos ruedas. */
     @Test
-    public void swapShouldExchangeWheelConfigurations()
+    public void swapShouldExchangeWheelConfigurations() throws SlotMachineException
     {
         sm.placeSymbol(1, "red");
         sm.placeSymbol(2, "blue");
@@ -146,11 +163,11 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: swap con una rueda fija no debe realizar el intercambio. */
     @Test
-    public void swapShouldFailWhenAWheelIsLocked()
+    public void swapShouldFailWhenAWheelIsLocked() throws SlotMachineException
     {
         sm.lock(1);
         String[] before = sm.configuration().clone();
-        sm.swap(1, 2);
+        expect(SlotMachineException.WHEEL_LOCKED, () -> sm.swap(1, 2));
         assertFalse(sm.ok());
         assertArrayEquals(before, sm.configuration());
     }
@@ -159,7 +176,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: spin(wheel, steps) avanza exactamente el numero de pasos dado. */
     @Test
-    public void spinWithStepsShouldAdvanceExactAmount()
+    public void spinWithStepsShouldAdvanceExactAmount() throws SlotMachineException
     {
         sm.placeSymbol(1, "red"); // wheel1 = [red, green], indice 0
         sm.spin(1, 1);
@@ -169,7 +186,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: spin(wheel, steps) debe ciclar correctamente al pasar el limite. */
     @Test
-    public void spinWithStepsShouldWrapAround()
+    public void spinWithStepsShouldWrapAround() throws SlotMachineException
     {
         sm.placeSymbol(1, "red"); // wheel1 tiene 2 simbolos
         sm.spin(1, 2); // dos pasos en una rueda de 2 -> vuelve al mismo simbolo
@@ -178,11 +195,11 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: spin(wheel, steps) sobre una rueda fija no debe moverla. */
     @Test
-    public void spinWithStepsShouldFailWhenWheelIsLocked()
+    public void spinWithStepsShouldFailWhenWheelIsLocked() throws SlotMachineException
     {
         sm.lock(3);
         String before = sm.configuration()[2];
-        sm.spin(3, 1);
+        expect(SlotMachineException.WHEEL_LOCKED, () -> sm.spin(3, 1));
         assertFalse(sm.ok());
         assertEquals(before, sm.configuration()[2]);
     }
@@ -191,7 +208,7 @@ public class SlotMachineC2Test
 
     /** QUE DEBERIA HACER: spin(setSymbols) deja la maquina exactamente en la configuracion dada. */
     @Test
-    public void spinWithConfigurationShouldApplyGivenColors()
+    public void spinWithConfigurationShouldApplyGivenColors() throws SlotMachineException
     {
         sm.spin(new String[]{"red", "blue", "yellow"});
         assertTrue(sm.ok());
@@ -200,10 +217,10 @@ public class SlotMachineC2Test
 
     /** QUE NO DEBERIA HACER: spin(setSymbols) con un tamano distinto al numero de ruedas debe fallar. */
     @Test
-    public void spinWithConfigurationShouldFailWithWrongSize()
+    public void spinWithConfigurationShouldFailWithWrongSize() throws SlotMachineException
     {
         String[] before = sm.configuration().clone();
-        sm.spin(new String[]{"red", "blue"});
+        expect(SlotMachineException.CONFIGURATION_MISMATCH, () -> sm.spin(new String[]{"red", "blue"}));
         assertFalse(sm.ok());
         assertArrayEquals(before, sm.configuration());
     }
@@ -211,10 +228,10 @@ public class SlotMachineC2Test
     /** QUE NO DEBERIA HACER: spin(setSymbols) con un color inexistente en alguna rueda debe fallar
      *  sin alterar ninguna rueda (todo o nada). */
     @Test
-    public void spinWithConfigurationShouldFailWithUnknownColorAndNotChangeAnything()
+    public void spinWithConfigurationShouldFailWithUnknownColorAndNotChangeAnything() throws SlotMachineException
     {
         String[] before = sm.configuration().clone();
-        sm.spin(new String[]{"red", "purple", "yellow"});
+        expect(SlotMachineException.SYMBOL_NOT_FOUND, () -> sm.spin(new String[]{"red", "purple", "yellow"}));
         assertFalse(sm.ok());
         assertArrayEquals(before, sm.configuration());
     }

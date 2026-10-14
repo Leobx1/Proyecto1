@@ -32,6 +32,19 @@ public class ShySymbol extends Symbol
         return shown;
     }
 
+    @Override
+    public String getMark()
+    {
+        return "dot";
+    }
+
+    @Override
+    protected java.awt.Shape buildMark(int x, int y, int d)
+    {
+        double dot = Math.max(2, d * 0.44);
+        return new java.awt.geom.Ellipse2D.Double(x + (d - dot) / 2, y + (d - dot) / 2, dot, dot);
+    }
+
     /** Indica si el simbolo esta en estado visible. */
     public boolean isShown()
     {

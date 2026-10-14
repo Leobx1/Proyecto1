@@ -2,7 +2,17 @@ import java.util.Arrays;
 
 public class SlotMachineContestTest
 {
-    public void test1()
+    /** Resuelve la maquina; retorna false si no tiene solucion (NO_SOLUTION). */
+    private boolean trySolve(SlotMachine game)
+    {
+        try {
+            return game.solve();
+        } catch (SlotMachineException e) {
+            return false;
+        }
+    }
+
+    public void test1() throws SlotMachineException
     {
         System.out.println("\n--- Test 1: Constructor SlotMachine(n) ---");
         SlotMachine game = new SlotMachine(3);
@@ -11,11 +21,11 @@ public class SlotMachineContestTest
         System.out.println("✓ PASS");
     }
 
-        public void test2()
+        public void test2() throws SlotMachineException
     {
         System.out.println("\n--- Test 2: solve() ---");
         SlotMachine game = new SlotMachine(3);
-        boolean result = game.solve();
+        boolean result = trySolve(game);
         System.out.println("solve() retorna: " + result);
         System.out.println("Config: " + Arrays.toString(game.configuration()));
         System.out.println("Jackpot: " + game.isJackpot());
@@ -28,11 +38,11 @@ public class SlotMachineContestTest
         }
     }
 
-    public void test3()
+    public void test3() throws SlotMachineException
     {
         System.out.println("\n--- Test 3: simulate() ---");
         SlotMachine game = new SlotMachine(4);
-        game.solve();
+        trySolve(game);
         
         if (game.ok()) {
             boolean result = game.simulate();
@@ -45,7 +55,7 @@ public class SlotMachineContestTest
         }
     }
 
-    public void test4()
+    public void test4() throws SlotMachineException
         {
         System.out.println("\n--- Test 4: spin(wheel, steps) ---");
         SlotMachine game = new SlotMachine(3);
@@ -58,7 +68,7 @@ public class SlotMachineContestTest
         System.out.println("✓ PASS");
         }
 
-    public void test5()
+    public void test5() throws SlotMachineException
     {
         System.out.println("\n--- Test 5: distinctSymbols() ---");
         SlotMachine game = new SlotMachine(2);
@@ -68,11 +78,11 @@ public class SlotMachineContestTest
         System.out.println("✓ PASS");
     }
 
-    public void sharedTest1()
+    public void sharedTest1() throws SlotMachineException
     {
         System.out.println("\n--- Shared Test 1: SlotMachine(2) ---");
         SlotMachine game = new SlotMachine(2);
-        boolean solved = game.solve();
+        boolean solved = trySolve(game);
         
         if (solved) {
             assert game.isJackpot();
@@ -82,11 +92,11 @@ public class SlotMachineContestTest
         }
     }
     
-    public void sharedTest2()
+    public void sharedTest2() throws SlotMachineException
     {
         System.out.println("\n--- Shared Test 2: SlotMachine(5) ---");
         SlotMachine game = new SlotMachine(5);
-        boolean solved = game.solve();
+        boolean solved = trySolve(game);
         
         if (solved) {
             game.simulate();
@@ -111,7 +121,7 @@ public class SlotMachineContestTest
             t.sharedTest1();
             t.sharedTest2();
             System.out.println("\n✓ ALL TESTS PASSED\n");
-        } catch (AssertionError e) {
+        } catch (AssertionError | SlotMachineException e) {
             System.out.println("\n✗ TEST FAILED: " + e.getMessage());
             e.printStackTrace();
         }

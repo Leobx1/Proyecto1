@@ -30,9 +30,9 @@ public class LeftyWheel extends Wheel
     }
 
     @Override
-    public void spin()
+    public void spin() throws SlotMachineException
     {
-        if (!prepareSpin()) return;
+        prepareSpin();
         if (left != null && left.symbolCount() > 0) {
             int idx = indexOf(left.currentSymbol());
             if (idx != -1) {

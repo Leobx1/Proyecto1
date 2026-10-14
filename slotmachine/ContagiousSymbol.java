@@ -20,6 +20,25 @@ public class ContagiousSymbol extends Symbol
     }
 
     @Override
+    public String getMark()
+    {
+        return "cross";
+    }
+
+    @Override
+    protected java.awt.Shape buildMark(int x, int y, int d)
+    {
+        java.awt.BasicStroke stroke = new java.awt.BasicStroke(Math.max(2f, d * 0.16f));
+        double a = d * 0.24;
+        double b = d * 0.76;
+        java.awt.geom.Area cross = new java.awt.geom.Area(stroke.createStrokedShape(
+            new java.awt.geom.Line2D.Double(x + a, y + a, x + b, y + b)));
+        cross.add(new java.awt.geom.Area(stroke.createStrokedShape(
+            new java.awt.geom.Line2D.Double(x + b, y + a, x + a, y + b))));
+        return cross;
+    }
+
+    @Override
     public void onSpinSelected()
     {
         // Sin companeros no hay a quien contagiar.
